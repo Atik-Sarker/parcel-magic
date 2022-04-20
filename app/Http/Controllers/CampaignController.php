@@ -15,7 +15,7 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        //
+        return view('backend.campaign.index');
     }
 
     /**
@@ -25,7 +25,7 @@ class CampaignController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.campaign.create');
     }
 
     /**
