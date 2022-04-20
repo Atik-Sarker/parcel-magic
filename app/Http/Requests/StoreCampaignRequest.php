@@ -13,7 +13,7 @@ class StoreCampaignRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class StoreCampaignRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date',
+            'total_budget' => 'required|numeric|min:1',
+            'daily_budget' => 'required|numeric|min:1',
+            'banner' => 'required',
+            'banner.*' => 'image|mimes:jpeg,jpg,png,gif',
         ];
     }
 }

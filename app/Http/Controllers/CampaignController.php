@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Http\Requests\StoreCampaignRequest;
 use App\Http\Requests\UpdateCampaignRequest;
+use App\Http\Traits\ImageManage;
 
 class CampaignController extends Controller
 {
+    use ImageManage;
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +47,25 @@ class CampaignController extends Controller
      */
     public function store(StoreCampaignRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        dd($data['banner']);
+
+        if($data['banner']) {
+            foreach($data['banner'] as $file){ 
+                $imgName[] = $this->UploadImage($file);  
+            }
+
+            dd($imgName);
+
+            $Campaign = new Campaign();
+            
+           
+            $Campaign->save();
+           return back()->with('success', 'File has successfully uploaded!');
+        }
+
+        return $data;
     }
 
     /**
