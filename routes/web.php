@@ -20,3 +20,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('campaign', CampaignController::class);
+Route::get('campaign/{id}/{index}','CampaignController@deleteImage')->name('delete.banner.image');

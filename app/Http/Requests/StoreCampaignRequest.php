@@ -30,7 +30,23 @@ class StoreCampaignRequest extends FormRequest
             'total_budget' => 'required|numeric|min:1',
             'daily_budget' => 'required|numeric|min:1',
             'banner' => 'required',
-            'banner.*' => 'image|mimes:jpeg,jpg,png,gif',
+            'banner.*' => 'required|image|mimes:jpeg,bmp,png,jpg,gif,JPG'
         ];
     }
+
+
+    /*
+    * for custom validation message
+    */
+
+
+    public function messages()
+    {
+        return [
+            'banner.*.required' => "The image must be an image.",
+            'banner.*.mimes' => "The image must be a file of type: jpeg, bmp, png, jpg, gif, JPG."
+        ];
+    }
+
+
 }

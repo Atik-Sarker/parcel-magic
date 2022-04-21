@@ -9,5 +9,7 @@ class Campaign extends Model
 {
     use HasFactory;
 
-    protected $fillables = ['name','from_date','to_date','total_budget','daily_budget','banner'];
+    protected $guarded = [];
+
+    //protected $fillable = ['name','from_date','to_date','total_budget','daily_budget','banner', 'created_at', 'updated_at'];
 }
