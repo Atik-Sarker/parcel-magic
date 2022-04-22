@@ -24,8 +24,9 @@
     <div class="row">
         <!-- Area Chart -->
         <div class="col-xl-12 col-lg-12">
-            <form action="{{ route('campaign.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('campaign.update', $campaign->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-body">
@@ -77,14 +78,12 @@
                             </div>
 
                             <div class="col-lg-12 banner">
-                                @foreach(explode('|',$campaign->banner) as $index => $banner)
-                                <a href="{{ route('delete.banner.image', [$campaign->id, $index])}}" class="btn btn-sm btn-danger">
-                                    [delete]
-                                </a>
-                                <img src="{{ asset('storage') }}/{{ $banner }}" alt="">
-                                
-                            @endforeach
-
+                                @if($campaign->banner)
+                                    @foreach(explode('|',$campaign->banner) as $index => $banner)
+                                    <a href="{{ route('delete.banner.image', [$campaign->id, $index])}}" class="btn btn-sm btn-danger">X</a>
+                                    <img src="{{ asset('storage') }}/{{ $banner }}" alt="">
+                                    @endforeach
+                                @endif
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">

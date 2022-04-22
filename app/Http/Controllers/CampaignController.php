@@ -27,7 +27,7 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = Campaign::where('status', 1)->paginate(5);
+        $campaigns = Campaign::where('status', 1)->orderBy('created_at', 'DESC')->paginate(10);
         return view('backend.campaign.index', compact('campaigns'));
     }
 
@@ -78,7 +78,16 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        //
+
+        $html = view('backend.campaign.view', compact('campaign'))->render();
+
+
+        $response = [
+            'code' => "200",
+            'html' => $html,
+        ];
+
+       return response()->json($response, 200);
     }
 
     /**
@@ -102,35 +111,31 @@ class CampaignController extends Controller
     public function update(UpdateCampaignRequest $request, Campaign $campaign)
     {
        
-        
+        $data = $request->validated();
 
+        // $campaign->update($data);
 
-
-
-
-
-        $allImageName= array();
-        if ($request->hasFile('image')) {
-            $count = 1;
-            foreach ($request->image as $file)
-            {
-                $getClientMimeType = $file->getClientMimeType();
-                if ($getClientMimeType != 'image/png' and $getClientMimeType != 'image/jpg' and $getClientMimeType != 'image/jpeg' and $getClientMimeType != 'image/gif'){
-                    Toastr::error('Invalid Image', 'Error');
-                    return redirect()->back();
+        // dd('validated',$data['banner'], $campaign);
+        $newImageName= array();
+        try{
+            if ($data['banner']) {
+                foreach ($data['banner'] as $file){
+                    $newImageName[] = $this->UploadImage($file);
                 }
-                $originalExtension = $file->getClientOriginalExtension();
-                $customImageName = str_replace([' ','.','_'],['-','','-'],$request->name).'-'.time().$count++.'.'.$originalExtension;
-                $destinationPath = storage_path('/app/public/image');
-                $img = Image::make($file->getRealPath());
-                $img->resize(555, 400)->save($destinationPath.'/'.$customImageName);
-//                $file->storeAs('image',$customImageName);
-                $allImageName[] = $customImageName . '|';
+                if($campaign->banner){
+                    $data['banner'] = implode('|', array_merge($newImageName, explode('|', $campaign->banner)));
+                }else{
+                    $data['banner'] = implode('|',$newImageName);
+                }
             }
-            $oldImage = array_filter(explode('|',$car->image));
-            foreach($oldImage as $image){
-                $allImageName[] = $image.'|';
-            }
+            $campaign->update($data);
+            Log::info("Campaign update successfully");
+            session()->flash('message', 'Campaign update successfully');
+            return redirect()->route('campaign.index')->with('status', true);
+        }catch(\Exception $e){
+            Log::error('Failed to update Campaign :'.$e->getMessage());
+            session()->flash('message', 'Whoops! Something went wrong, Please try again.');
+            return redirect()->route('campaign.index')->with('status', false);
         }
     }
 
@@ -142,7 +147,23 @@ class CampaignController extends Controller
      */
     public function destroy(Campaign $campaign)
     {
-        //
+        try{
+
+            foreach(explode('|', $campaign->banner) as $banner){
+                if (file_exists(storage_path("app/public/{$banner}")))
+                    unlink(storage_path("app/public/{$banner}"));
+            }
+            $campaign->delete();
+            Log::info("Campaign delete successfully");
+            session()->flash('message', 'Campaign delete successfully');
+            return redirect()->route('campaign.index')->with('status', true);
+        }catch(\Exception $e){
+            Log::error('Failed to delete Campaign :'.$e->getMessage());
+            session()->flash('message', 'Whoops! Something went wrong, Please try again.');
+            return redirect()->route('campaign.index')->with('status', false);
+        }
+       
+       
     }
 
     /**
@@ -152,20 +173,15 @@ class CampaignController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
     public function deleteImage(Campaign $campaign, $index){
-
-        return 'delete image';
-        $allimage = explode("|", $campaign->banner);
-
-        if (file_exists(storage_path("app/public/image/{$allimage[$index]}"))){
-            unlink(storage_path("app/public/image/{$allimage[$index]}"));
-            unset($allimage[$index]);
+        $banners = explode("|", $campaign->banner);
+        if (file_exists(storage_path("app/public/{$banners[$index]}"))){
+            unlink(storage_path("app/public/{$banners[$index]}"));
+            unset($banners[$index]);
         }else{
-            unset($allimage[$index]);
+            unset($banners[$index]);
         }
-
-        $campaign->banner = implode('|',$allimage);
+        $campaign->banner = implode('|',$banners);
         $campaign->save();
         return redirect()->back();
 

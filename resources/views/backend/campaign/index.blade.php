@@ -1,5 +1,16 @@
 @extends('layouts.master')
 
+@push('style')
+    <style>
+        .col-lg-12.banner img {
+            height: 250px;
+            width: 200px;
+            object-fit: scale-down;
+        }
+    </style>
+@endpush
+
+
 @section('content')
 <div class="container-fluid">
 
@@ -53,7 +64,17 @@
                                     <td>${{ $campaign->daily_budget }}</td>
                                     <td>{{ $campaign->from_date }}</td>
                                     <td>{{ $campaign->to_date }}</td>
-                                    <td>[ <a href="{{ route('campaign.show', $campaign->id) }}">view</a> | <a href="{{ route('campaign.edit', $campaign->id) }}">edit</a> | <a href="{{ route('campaign.destroy', $campaign->id) }}">delete</a> ]</td>
+                                    <td>[ <a href="{{ route('campaign.show', $campaign->id) }}" id="view">view</a> | 
+                                    <a href="{{ route('campaign.edit', $campaign->id) }}">edit</a> | 
+                                    <a href="#" onclick='event.preventDefault();
+                                                     document.getElementById("delete-form-{{$campaign->id}}").submit();'>delete</a>  ]
+
+
+                                    <form id="delete-form-{{$campaign->id}}" action="{{ route('campaign.destroy', $campaign->id) }}" method="POST" class="d-none">
+                                        @method("DELETE")
+                                        @csrf
+                                    </form>
+                                </td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -74,3 +95,41 @@
 </div>
 <!-- /.container-fluid -->
 @endsection
+
+
+@push('script')
+
+<script>
+
+    let view = document.getElementById('view')
+
+    view.onclick = function(e){
+
+        e.preventDefault();
+        
+        let url = $(this).attr('href');
+        console.log(url);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                console.log(response);
+                console.log(response.html);
+                $("#body").html(response.html);
+                // $('#modal-body').html(response.data);
+                $('#modal-title').text('Campaign Details');
+                $('#CampaignModal').modal('show');
+            }
+
+        })
+
+
+    }
+
+        // $('#profile').click(function (e) {
+            
+        // }); //show profile
+
+</script>
+
+@endpush

@@ -20,7 +20,7 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" class="form-control form-control-user @error('name') is-invalid @enderror" id="name" aria-describedby="name" placeholder="campaign name">
+                                    <input type="text" name="name" class="form-control form-control-user @error('name') is-invalid @enderror" id="name" aria-describedby="name" placeholder="campaign name" value="{{ old('name') }}">
                                 </div>
                                 @error('name')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -29,7 +29,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="from_date">Form Date</label>
-                                    <input type="date" name="from_date" class="form-control form-control-user @error('from_date') is-invalid @enderror" id="from_date" aria-describedby="from_date">
+                                    <input type="date" name="from_date" class="form-control form-control-user @error('from_date') is-invalid @enderror" id="from_date" aria-describedby="from_date" value="{{ old('from_date') }}">
                                 </div>
                                 @error('from_date')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -38,7 +38,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="to_date">To Date</label>
-                                    <input type="date" name="to_date" class="form-control form-control-user @error('to_date') is-invalid @enderror" id="to_date" aria-describedby="to_date">
+                                    <input type="date" name="to_date" class="form-control form-control-user @error('to_date') is-invalid @enderror" id="to_date" aria-describedby="to_date" value="{{ old('to_date') }}">
                                 </div>
                                 @error('to_date')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -47,7 +47,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="total_budget">Total Budget</label>
-                                    <input type="text" name="total_budget" class="form-control form-control-user @error('total_budget') is-invalid @enderror" id="total_budget" aria-describedby="fdate">
+                                    <input type="text" name="total_budget" class="form-control form-control-user @error('total_budget') is-invalid @enderror" id="total_budget" aria-describedby="total_budget" value="{{ old('total_budget') }}">
                                 </div>
                                 @error('total_budget')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -56,7 +56,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="daily_budget">Daily Budget</label>
-                                    <input type="text" name="daily_budget" class="form-control form-control-user @error('daily_budget') is-invalid @enderror" id="daily_budget" aria-describedby="daily_budget">
+                                    <input type="text" name="daily_budget" class="form-control form-control-user @error('daily_budget') is-invalid @enderror" id="daily_budget" aria-describedby="daily_budget" value="{{ old('daily_budget') }}">
                                 </div>
                                 @error('daily_budget')
                                     <div class="alert alert-danger">{{ $message }}</div>
