@@ -68,14 +68,12 @@
                                     <input type="file" name="banner[]" class="form-control form-control-user @error('banner') is-invalid @enderror" id="banner" aria-describedby="banner" multiple>
                                 </div>
 
-                                @error('banner[]')
+                                @error('banner')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
 
-                                =================
-                               
 
-                                @if (count($errors) > 0)
+                                {{-- @if (count($errors) > 0)
                                     <div class="alert alert-danger">
                                         <ul>
                                             @foreach ($errors->all() as $error)
@@ -83,7 +81,7 @@
                                             @endforeach
                                         </ul>
                                     </div>
-                                @endif
+                                @endif --}}
 
 
                             </div>
