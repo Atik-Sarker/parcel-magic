@@ -27,7 +27,7 @@ class CampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = Campaign::where('status', 1)->orderBy('created_at', 'DESC')->paginate(10);
+        $campaigns = Campaign::where('status', 1)->orderBy('created_at', 'DESC')->paginate(7);
         return view('backend.campaign.index', compact('campaigns'));
     }
 
@@ -67,7 +67,7 @@ class CampaignController extends Controller
             session()->flash('message', 'Whoops! Something went wrong, Please try again.');
             return redirect()->route('campaign.index')->with('status', false);
         }
-     
+
     }
 
     /**
@@ -80,8 +80,6 @@ class CampaignController extends Controller
     {
 
         $html = view('backend.campaign.view', compact('campaign'))->render();
-
-
         $response = [
             'code' => "200",
             'html' => $html,
@@ -110,15 +108,10 @@ class CampaignController extends Controller
      */
     public function update(UpdateCampaignRequest $request, Campaign $campaign)
     {
-       
         $data = $request->validated();
-
-        // $campaign->update($data);
-
-        // dd('validated',$data['banner'], $campaign);
         $newImageName= array();
         try{
-            if ($data['banner']) {
+            if (isset($data['banner'])) {
                 foreach ($data['banner'] as $file){
                     $newImageName[] = $this->UploadImage($file);
                 }
@@ -127,6 +120,8 @@ class CampaignController extends Controller
                 }else{
                     $data['banner'] = implode('|',$newImageName);
                 }
+            }else{
+                $data['banner'] = $campaign->banner;
             }
             $campaign->update($data);
             Log::info("Campaign update successfully");
@@ -162,8 +157,8 @@ class CampaignController extends Controller
             session()->flash('message', 'Whoops! Something went wrong, Please try again.');
             return redirect()->route('campaign.index')->with('status', false);
         }
-       
-       
+
+
     }
 
     /**

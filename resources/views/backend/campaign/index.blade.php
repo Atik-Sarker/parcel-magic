@@ -64,8 +64,8 @@
                                     <td>${{ $campaign->daily_budget }}</td>
                                     <td>{{ $campaign->from_date }}</td>
                                     <td>{{ $campaign->to_date }}</td>
-                                    <td>[ <a href="{{ route('campaign.show', $campaign->id) }}" id="view">view</a> | 
-                                    <a href="{{ route('campaign.edit', $campaign->id) }}">edit</a> | 
+                                    <td>[ <a href="{{ route('campaign.show', $campaign->id) }}" class="view">view</a> |
+                                    <a href="{{ route('campaign.edit', $campaign->id) }}">edit</a> |
                                     <a href="#" onclick='event.preventDefault();
                                                      document.getElementById("delete-form-{{$campaign->id}}").submit();'>delete</a>  ]
 
@@ -83,6 +83,7 @@
                             @endforelse
                             </tbody>
                         </table>
+                        {!! $campaigns->links() !!}
                     </div>
                 </div>
             </div>
@@ -101,13 +102,15 @@
 
 <script>
 
-    let view = document.getElementById('view')
 
-    view.onclick = function(e){
 
-        e.preventDefault();
-        
-        let url = $(this).attr('href');
+$("body").on("click", ".view", function(e){
+    e.preventDefault();
+  alert("The paragraph was clicked.");
+
+
+
+  let url = $(this).attr('href');
         console.log(url);
         $.ajax({
             type: 'GET',
@@ -116,19 +119,13 @@
                 console.log(response);
                 console.log(response.html);
                 $("#body").html(response.html);
-                // $('#modal-body').html(response.data);
                 $('#modal-title').text('Campaign Details');
                 $('#CampaignModal').modal('show');
             }
 
         })
+});
 
-
-    }
-
-        // $('#profile').click(function (e) {
-            
-        // }); //show profile
 
 </script>
 
