@@ -20,10 +20,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::middleware('api')->prefix('auth')->namespace('API')->group(function () {
-    Route::post('login', 'AuthController@login');
-    Route::get('logout', 'AuthController@logout');
-    Route::get('refresh', 'AuthController@refresh');
-    Route::get('me', 'AuthController@me');
+Route::namespace('API')->group(function () {
+
+    Route::prefix('auth')->group(function(){
+        Route::post('login', 'AuthController@login');
+        Route::get('logout', 'AuthController@logout');
+        Route::get('refresh', 'AuthController@refresh');
+        Route::get('me', 'AuthController@me');
+    });
+
+    Route::middleware(['auth.jwt', 'auth:api'])->group(function(){
+        Route::apiResources(['campaign' => CampaignController::class]);
+    });
 
 });
